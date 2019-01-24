@@ -5,12 +5,5 @@ var user=os.userInfo();
 
 const notes=require('./notes');// give reletive path... this is nota module but a file... so reletive path
 
-fs.appendFile('greeting.text',`Hello ! ${user.username}. you are ${notes.age}`,(err)=>{
-    if(err)
-    {
-        console.log("unable to append the file");
-    }
-    else{
-        console.log("append successfully");
-    }
-})
+var res=notes.addNote();
+console.log(res)
