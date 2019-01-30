@@ -1,20 +1,35 @@
 const fs=require("fs");
 
+const fetchNotes=()=>{
+    try{
+        return JSON.parse(fs.readFileSync("notes-data.json"));
+    }
+    catch(e)
+    {
+        return [];
+    }
+}
+const saveNotes=(note)=>{
+   
+    fs.writeFileSync("notes-data.json",JSON.stringify(notes));
+}
 const addNote=(title,body)=>{
-    let notes=[];
+    let notes=fetchNotes();
     let note={
         title,
         body
     }
-    try{
-        notes=JSON.parse(fs.readFileSync("notes-data.json"));
-    }
-    catch(e)
+
+    let duplicateNote=notes.filter(note=>note.title===title);
+    if(duplicateNote.length===0)
     {
-        console.log("Exception occured : ",e);
+        notes.push(note);
+        saveNotes(notes);
     }
-    notes.push(note);
-    fs.writeFileSync("notes-data.json",JSON.stringify(notes));
+    else{
+        console.log("cannot add : title already present ");
+    }
+    
 }
 
 const getAll=()=>{
@@ -25,12 +40,17 @@ const getNote=(title)=>{
     console.log("getting note : ",title);
 }
 
-const removeNote=()=>{
-    console.log("removing note : ")
+const removeNote=(title)=>{
+    console.log("removing note : ");
+    let notes=fetchNotes();
+    
+    
+
 }
 
 module.exports={
     addNote,
     getAll,
-    getNote
+    getNote,
+    removeNote
 }
