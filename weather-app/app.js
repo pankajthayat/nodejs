@@ -1,5 +1,8 @@
 const yargs = require('yargs');
-const request = require('request');
+
+const geocode=require('./geocode/geocode');
+
+const weather=require("./weather/weather")
 console.log("app starting..........")
 
 const argv = yargs
@@ -18,35 +21,22 @@ const argv = yargs
 //as string not sth else... this is just to
 // make our app full proof
 
-console.log(argv);
+
 
 let address = argv.address;
 
-address = encodeURIComponent(address);
-console.log(address);
+geocode.geocodeAddress(address,(errorMessage,results)=>{
+if(errorMessage)
+{
+    console.log(errorMessage);
+}
+else{
+    console.log(JSON.stringify(results,undefined,2))
+    weather.getWeatherForcast(results.latitude,results.longitude)
+}
+});
 
-request({
-    url: `http://www.mapquestapi.com/geocoding/v1/address?key=Osdd59ApeBNKnfmtXdJgVLAGmK29E7LR&location=${address}`,
-    json: true
-}, (error, response, body) => {
-    // console.log("error : ",error);
-   // console.log("response : ",response);
-    // console.log("body : ",JSON.stringify(body,undefined,2));
-    if(error)
-    {
-        console.log("unable to connect");
-    }
-    else if(body.info.statuscode==400)
-    {
-        console.log("bad request");
-    }
-    else if(body.info.statuscode==0){
-    console.log(`provided address : ${body.results[0].providedLocation.location}`)
-    console.log(`lattitue : ${body.results[0].locations[0].latLng.lat}`)
-    console.log(`longitude : ${body.results[0].locations[0].latLng.lng}`)
-    }
-    else
-    {
-        console.log("something went wrong")
-    }
-})
+//90fe795347a14122e82822283ca59e48
+
+
+//https://api.darksky.net/forecast/[key]/[latitude],[longitude]
