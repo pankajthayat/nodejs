@@ -32,7 +32,15 @@ if(errorMessage)
 }
 else{
     console.log(JSON.stringify(results,undefined,2))
-    weather.getWeatherForcast(results.latitude,results.longitude)
+    weather.getWeatherForcast(results.latitude,results.longitude,(errorMessage,weatherResults)=>{
+        if(errorMessage)
+        {
+            console.log(errorMessage);
+        }
+        else{
+            console.log(JSON.stringify(weatherResults))
+        }
+    })
 }
 });
 
